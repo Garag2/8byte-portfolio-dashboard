@@ -10,6 +10,39 @@ interface CacheEntry {
 const cache: Record<string, CacheEntry> = {};
 const CACHE_TTL_MS = 60 * 1000; // 1 minute
 
+// Prevent Rate Limit errors by mapping known sectors directly
+const knownSectors: Record<string, string> = {
+  'HDFCBANK.NS': 'Financial Services',
+  'BAJFINANCE.NS': 'Financial Services',
+  'ICICIBANK.NS': 'Financial Services',
+  'BAJAJHOUS.NS': 'Financial Services',
+  'SAVANIFI.BO': 'Financial Services',
+  'AFFLE.NS': 'Technology',
+  'LTIM.NS': 'Technology',
+  'KPITTECH.NS': 'Technology',
+  'TATATECH.NS': 'Technology',
+  'INFY.NS': 'Technology',
+  'HAPPSTMNDS.NS': 'Technology',
+  'TANLA.NS': 'Technology',
+  'BLSE.NS': 'Technology',
+  'DMART.NS': 'Consumer Defensive',
+  'TATACONSUM.NS': 'Consumer Defensive',
+  'PIDILITIND.NS': 'Industrials',
+  'ASTRAL.NS': 'Industrials',
+  'POLYCAB.NS': 'Industrials',
+  'TATAPOWER.NS': 'Utilities',
+  'KPIGREEN.NS': 'Utilities',
+  'SUZLON.NS': 'Utilities',
+  'GENSOL.NS': 'Industrials',
+  'HARIOMPIPE.NS': 'Basic Materials',
+  'CLEAN.NS': 'Basic Materials',
+  'DEEPAKNTR.NS': 'Basic Materials',
+  'FINEORG.NS': 'Basic Materials',
+  'GRAVITA.NS': 'Basic Materials',
+  'SBILIFE.NS': 'Financial Services',
+  'EASEMYTRIP.NS': 'Consumer Cyclical'
+};
+
 // Mock fallback for PE / Earnings
 const mockData: Record<string, { peRatio: number; latestEarnings: string }> = {
   AAPL: { peRatio: 28.5, latestEarnings: 'Q2 2026' },
@@ -35,24 +68,11 @@ export async function getStockData(symbols: string[]) {
       const quotes = await yahooFinance.quote(symbolsToFetch);
       const quotesArray = Array.isArray(quotes) ? quotes : [quotes];
 
-      const profiles = await Promise.all(
-        symbolsToFetch.map(async (symbol) => {
-          try {
-            const profile: any = await yahooFinance.quoteSummary(symbol, { modules: ['summaryProfile'] });
-            return { symbol, sector: profile.summaryProfile?.sector || 'Unknown' };
-          } catch (error) {
-            return { symbol, sector: 'Unknown' };
-          }
-        })
-      );
-
-      const sectorMap = new Map(profiles.map(p => [p.symbol, p.sector]));
-
       quotesArray.forEach((quote: any) => {
         cache[quote.symbol] = {
           data: {
             ...quote,
-            sector: sectorMap.get(quote.symbol) || 'Unknown',
+            sector: knownSectors[quote.symbol] || 'Unknown',
             peRatio: mockData[quote.symbol]?.peRatio || 'N/A',
             latestEarnings: mockData[quote.symbol]?.latestEarnings || 'N/A'
           },
@@ -65,7 +85,7 @@ export async function getStockData(symbols: string[]) {
       symbolsToFetch.forEach(sym => {
         if (!cache[sym]) {
           cache[sym] = {
-            data: { symbol: sym, regularMarketPrice: null, regularMarketPreviousClose: null, sector: 'Unknown', peRatio: 'N/A', latestEarnings: 'N/A' },
+            data: { symbol: sym, regularMarketPrice: null, regularMarketPreviousClose: null, sector: knownSectors[sym] || 'Unknown', peRatio: 'N/A', latestEarnings: 'N/A' },
             timestamp: now
           };
         }
@@ -77,9 +97,11 @@ export async function getStockData(symbols: string[]) {
   symbols.forEach(sym => {
     if (!cache[sym]) {
       cache[sym] = {
-        data: { symbol: sym, regularMarketPrice: null, regularMarketPreviousClose: null, sector: 'Unknown', peRatio: 'N/A', latestEarnings: 'N/A' },
+        data: { symbol: sym, regularMarketPrice: null, regularMarketPreviousClose: null, sector: knownSectors[sym] || 'Unknown', peRatio: 'N/A', latestEarnings: 'N/A' },
         timestamp: Date.now()
       };
+    } else if (cache[sym].data.sector === 'Unknown') {
+      cache[sym].data.sector = knownSectors[sym] || 'Unknown';
     }
   });
 
