@@ -1,10 +1,8 @@
 "use client";
-
+import React, { useState, useMemo } from 'react';
 import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable, SortingState } from '@tanstack/react-table';
-import { useState } from 'react';
 import { EnrichedHolding } from '../types/portfolio';
-import styles from './dashboard.module.css';
-import { formatCurrency, formatNumber } from '../utils/formatter';
+import { formatCurrency, formatNumber, formatPercentage } from '../utils/formatter';
 import GainLossBadge from './GainLossBadge';
 import { ArrowUpDown } from 'lucide-react';
 
@@ -12,102 +10,124 @@ interface Props {
   holdings: EnrichedHolding[];
 }
 
-export default function PortfolioTable({ holdings }: Props) {
+const PortfolioTable = React.memo(({ holdings }: Props) => {
   const [sorting, setSorting] = useState<SortingState>([]);
+
+  const columns = useMemo(() => [
+    {
+      accessorKey: 'symbol',
+      header: 'Asset',
+      cell: (info: any) => (
+        <div>
+          <div className="font-bold text-blue-400">{info.getValue() as string}</div>
+          <div className="text-xs text-slate-400 mt-1">{info.row.original.name}</div>
+        </div>
+      ),
+    },
+    {
+      accessorKey: 'shares',
+      header: 'Shares',
+      cell: (info: any) => formatNumber(info.getValue() as number),
+    },
+    {
+      accessorKey: 'averageBuyPrice',
+      header: 'Avg Cost',
+      cell: (info: any) => formatCurrency(info.getValue() as number),
+    },
+    {
+      accessorKey: 'currentPrice',
+      header: 'Price (CMP)',
+      cell: (info: any) => formatCurrency(info.getValue() as number),
+    },
+    {
+      accessorKey: 'presentValue',
+      header: 'Present Value',
+      cell: (info: any) => formatCurrency(info.getValue() as number),
+    },
+    {
+      accessorKey: 'portfolioPercentage',
+      header: 'Portfolio %',
+      cell: (info: any) => formatPercentage(info.getValue() as number),
+    },
+    {
+      accessorKey: 'dayGainLossAmount',
+      header: 'Today\'s Change',
+      cell: (info: any) => (
+        <GainLossBadge 
+          amount={info.getValue() as number} 
+          percentage={info.row.original.dayGainLossPercentage} 
+        />
+      ),
+    },
+    {
+      accessorKey: 'totalGainLossAmount',
+      header: 'Total Return',
+      cell: (info: any) => (
+        <GainLossBadge 
+          amount={info.getValue() as number} 
+          percentage={info.row.original.totalGainLossPercentage} 
+        />
+      ),
+    },
+    {
+      accessorKey: 'peRatio',
+      header: 'P/E',
+      cell: (info: any) => <span className="text-slate-300">{info.getValue() as string}</span>,
+    },
+    {
+      accessorKey: 'latestEarnings',
+      header: 'Earnings',
+      cell: (info: any) => <span className="text-slate-300">{info.getValue() as string}</span>,
+    }
+  ], []);
 
   const table = useReactTable({
     data: holdings,
-    columns: [
-      {
-        accessorKey: 'symbol',
-        header: 'Asset',
-        cell: info => (
-          <div>
-            <div className={styles.symbol}>{info.getValue() as string}</div>
-            <div className={styles.name}>{info.row.original.name}</div>
-          </div>
-        ),
-      },
-      {
-        accessorKey: 'shares',
-        header: 'Shares',
-        cell: info => formatNumber(info.getValue() as number),
-      },
-      {
-        accessorKey: 'currentPrice',
-        header: 'Price',
-        cell: info => formatCurrency(info.getValue() as number),
-      },
-      {
-        accessorKey: 'totalValue',
-        header: 'Total Value',
-        cell: info => formatCurrency(info.getValue() as number),
-      },
-      {
-        accessorKey: 'dayGainLossAmount',
-        header: 'Today\'s Change',
-        cell: info => (
-          <GainLossBadge 
-            amount={info.getValue() as number} 
-            percentage={info.row.original.dayGainLossPercentage} 
-          />
-        ),
-      },
-      {
-        accessorKey: 'totalGainLossAmount',
-        header: 'Total Return',
-        cell: info => (
-          <GainLossBadge 
-            amount={info.getValue() as number} 
-            percentage={info.row.original.totalGainLossPercentage} 
-          />
-        ),
-      },
-    ],
-    state: {
-      sorting,
-    },
+    columns,
+    state: { sorting },
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
   });
 
   return (
-    <div className={`glass-panel ${styles.tableWrapper}`}>
-      <table className={styles.table}>
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th 
-                  key={header.id} 
-                  onClick={header.column.getToggleSortingHandler()}
-                  style={{ cursor: header.column.getCanSort() ? 'pointer' : 'default' }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                    {header.column.getCanSort() && <ArrowUpDown size={14} opacity={0.5} />}
-                  </div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map(row => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map(cell => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="glass-panel rounded-2xl w-full overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse min-w-[1000px]">
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id} className="border-b border-white/10">
+                {headerGroup.headers.map(header => (
+                  <th 
+                    key={header.id} 
+                    onClick={header.column.getToggleSortingHandler()}
+                    className={`p-4 text-sm font-medium text-slate-400 whitespace-nowrap ${header.column.getCanSort() ? 'cursor-pointer hover:text-slate-200' : ''}`}
+                  >
+                    <div className="flex items-center gap-2">
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.column.getCanSort() && <ArrowUpDown size={14} className="opacity-50" />}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map(row => (
+              <tr key={row.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                {row.getVisibleCells().map(cell => (
+                  <td key={cell.id} className="p-4 text-sm">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
-}
+});
+
+PortfolioTable.displayName = 'PortfolioTable';
+export default PortfolioTable;

@@ -5,19 +5,24 @@ export interface PortfolioHolding {
 }
 
 export interface EnrichedHolding extends PortfolioHolding {
+  name: string;
   currentPrice: number;
   previousClose: number;
-  totalValue: number;
+  totalInvestment: number;
+  presentValue: number;
   totalGainLossAmount: number;
   totalGainLossPercentage: number;
   dayGainLossAmount: number;
   dayGainLossPercentage: number;
+  portfolioPercentage: number;
   sector: string;
-  name: string;
+  peRatio: string | number;
+  latestEarnings: string;
 }
 
 export interface PortfolioSummary {
-  totalValue: number;
+  totalInvestment: number;
+  presentValue: number;
   totalGainLossAmount: number;
   totalGainLossPercentage: number;
   dayGainLossAmount: number;
@@ -34,4 +39,6 @@ export interface PortfolioData {
   holdings: EnrichedHolding[];
   summary: PortfolioSummary;
   sectors: SectorAllocation[];
+  lastUpdated: string;
+  marketStatus: 'Open' | 'Closed';
 }

@@ -12,7 +12,6 @@ export function usePortfolio() {
 
     const fetchPortfolio = async () => {
       try {
-        setLoading(true);
         const response = await axios.get<PortfolioData>('/api/portfolio');
         if (isMounted) {
           setData(response.data);
@@ -32,8 +31,8 @@ export function usePortfolio() {
 
     fetchPortfolio();
     
-    // Refresh data every 5 minutes
-    const interval = setInterval(fetchPortfolio, 5 * 60 * 1000);
+    // Poll every 15 seconds
+    const interval = setInterval(fetchPortfolio, 15 * 1000);
     return () => {
       isMounted = false;
       clearInterval(interval);

@@ -1,5 +1,5 @@
-import { Briefcase, DollarSign, Activity } from 'lucide-react';
-import styles from './dashboard.module.css';
+import React from 'react';
+import { Briefcase, DollarSign, Activity, Wallet } from 'lucide-react';
 import { PortfolioSummary } from '../types/portfolio';
 import { formatCurrency } from '../utils/formatter';
 import GainLossBadge from './GainLossBadge';
@@ -8,33 +8,43 @@ interface Props {
   summary: PortfolioSummary;
 }
 
-export default function SummaryCards({ summary }: Props) {
+const SummaryCards = React.memo(({ summary }: Props) => {
   return (
-    <div className={styles.summaryCards}>
-      <div className={`glass-panel ${styles.card}`}>
-        <div className={styles.cardTitle}>
-          <Briefcase size={16} /> Total Balance
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+      <div className="glass-panel p-6 rounded-2xl flex flex-col gap-3 transition-transform hover:-translate-y-1">
+        <div className="text-slate-400 text-sm font-medium uppercase tracking-wider flex items-center gap-2">
+          <Wallet size={16} /> Total Investment
         </div>
-        <div className={styles.cardValue}>{formatCurrency(summary.totalValue)}</div>
+        <div className="text-3xl font-bold">{formatCurrency(summary.totalInvestment)}</div>
+      </div>
+
+      <div className="glass-panel p-6 rounded-2xl flex flex-col gap-3 transition-transform hover:-translate-y-1">
+        <div className="text-slate-400 text-sm font-medium uppercase tracking-wider flex items-center gap-2">
+          <Briefcase size={16} /> Current Value
+        </div>
+        <div className="text-3xl font-bold">{formatCurrency(summary.presentValue)}</div>
       </div>
       
-      <div className={`glass-panel ${styles.card}`}>
-        <div className={styles.cardTitle}>
-          <DollarSign size={16} /> Total Return
+      <div className="glass-panel p-6 rounded-2xl flex flex-col gap-3 transition-transform hover:-translate-y-1">
+        <div className="text-slate-400 text-sm font-medium uppercase tracking-wider flex items-center gap-2">
+          <DollarSign size={16} /> Overall Return
         </div>
-        <div className={styles.cardValue}>
+        <div className="text-3xl font-bold">
           <GainLossBadge amount={summary.totalGainLossAmount} percentage={summary.totalGainLossPercentage} />
         </div>
       </div>
 
-      <div className={`glass-panel ${styles.card}`}>
-        <div className={styles.cardTitle}>
+      <div className="glass-panel p-6 rounded-2xl flex flex-col gap-3 transition-transform hover:-translate-y-1">
+        <div className="text-slate-400 text-sm font-medium uppercase tracking-wider flex items-center gap-2">
           <Activity size={16} /> Today's Return
         </div>
-        <div className={styles.cardValue}>
+        <div className="text-3xl font-bold">
           <GainLossBadge amount={summary.dayGainLossAmount} percentage={summary.dayGainLossPercentage} />
         </div>
       </div>
     </div>
   );
-}
+});
+
+SummaryCards.displayName = 'SummaryCards';
+export default SummaryCards;
