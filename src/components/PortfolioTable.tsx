@@ -91,17 +91,17 @@ const PortfolioTable = React.memo(({ holdings }: Props) => {
   });
 
   return (
-    <div className="glass-panel rounded-2xl w-full overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[1000px]">
-          <thead>
+    <div className="glass-panel rounded-2xl w-full overflow-hidden flex flex-col h-[600px] max-h-[70vh]">
+      <div className="overflow-auto flex-1">
+        <table className="w-full text-left border-collapse min-w-[1000px] relative">
+          <thead className="sticky top-0 z-10 bg-slate-800/90 backdrop-blur-md shadow-sm">
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id} className="border-b border-white/10">
                 {headerGroup.headers.map(header => (
                   <th 
                     key={header.id} 
                     onClick={header.column.getToggleSortingHandler()}
-                    className={`p-4 text-sm font-medium text-slate-400 whitespace-nowrap ${header.column.getCanSort() ? 'cursor-pointer hover:text-slate-200' : ''}`}
+                    className={`p-4 text-sm font-medium text-slate-400 whitespace-nowrap bg-slate-900/50 ${header.column.getCanSort() ? 'cursor-pointer hover:text-slate-200' : ''}`}
                   >
                     <div className="flex items-center gap-2">
                       {flexRender(header.column.columnDef.header, header.getContext())}
