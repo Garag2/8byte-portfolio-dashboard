@@ -114,8 +114,3 @@ $$DayGainAmount = (CMP - PreviousClose) \times Shares$$
 $$DayGainPercentage = \left(\frac{CMP - PreviousClose}{PreviousClose}\right) \times 100$$
 
 ---
-
-## 📝 Troubleshooting
-
-- **Chart render warnings:** If you see Recharts container size warnings in console, they are safely mitigated by the visual `minHeight` styles.
-- **Empty / 0.00 values:** If Today's Change or P/E are represented by a dash (`—`), this means the stock (e.g. extremely low-cap small-caps) does not currently publish active previous-close or trailing metrics on Yahoo Finance. The app handles this gracefully without crashing the UI.
