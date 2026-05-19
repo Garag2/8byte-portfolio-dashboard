@@ -14,8 +14,8 @@ const SectorSummary = React.memo(({ sectors }: Props) => {
   return (
     <div className="glass-panel p-6 rounded-2xl h-full flex flex-col">
       <div className="text-slate-400 text-sm font-medium uppercase tracking-wider mb-6">Sector Allocation</div>
-      <div className="flex-1 min-h-[300px]">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="flex-1 min-h-[300px] w-full">
+        <ResponsiveContainer width="100%" height="100%" minHeight={300}>
           <PieChart>
             <Pie
               data={sectors}

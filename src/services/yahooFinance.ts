@@ -73,5 +73,15 @@ export async function getStockData(symbols: string[]) {
     }
   }
 
+  // Ensure all symbols have at least a fallback in cache to avoid crashes
+  symbols.forEach(sym => {
+    if (!cache[sym]) {
+      cache[sym] = {
+        data: { symbol: sym, regularMarketPrice: null, regularMarketPreviousClose: null, sector: 'Unknown', peRatio: 'N/A', latestEarnings: 'N/A' },
+        timestamp: Date.now()
+      };
+    }
+  });
+
   return symbols.map(sym => cache[sym].data);
 }
