@@ -91,10 +91,10 @@ const PortfolioTable = React.memo(({ holdings }: Props) => {
   });
 
   return (
-    <div className="glass-panel rounded-2xl w-full overflow-hidden flex flex-col h-[600px] max-h-[70vh]">
-      <div className="overflow-auto flex-1">
+    <div className="glass-panel rounded-2xl w-full overflow-hidden flex flex-col h-[500px] md:h-[600px] max-h-[70vh]">
+      <div className="overflow-auto flex-1 custom-scrollbar">
         <table className="w-full text-left border-collapse min-w-[1000px] relative">
-          <thead className="sticky top-0 z-10 bg-slate-800/90 backdrop-blur-md shadow-sm">
+          <thead className="sticky top-0 z-10 bg-slate-800/95 backdrop-blur-md shadow-sm">
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id} className="border-b border-white/10">
                 {headerGroup.headers.map(header => (
