@@ -2,14 +2,21 @@ import { PortfolioHolding, EnrichedHolding, PortfolioData, PortfolioSummary, Sec
 import { getStockData } from './yahooFinance';
 
 function checkMarketStatus(): 'Open' | 'Closed' {
+  // NSE/BSE trading hours: Mon–Fri, 9:15 AM – 3:30 PM IST (UTC+5:30)
   const now = new Date();
-  const day = now.getUTCDay();
-  const estHour = now.getUTCHours() - 4; // Approx EST
-  
-  if (day === 0 || day === 6) return 'Closed';
-  if (estHour < 9 || (estHour === 9 && now.getUTCMinutes() < 30) || estHour >= 16) {
-    return 'Closed';
-  }
+  const istOffset = 5.5 * 60 * 60 * 1000; // IST = UTC + 5:30
+  const ist = new Date(now.getTime() + istOffset);
+
+  const day = ist.getUTCDay(); // 0 = Sun, 6 = Sat
+  const hours = ist.getUTCHours();
+  const minutes = ist.getUTCMinutes();
+  const totalMinutes = hours * 60 + minutes;
+
+  const marketOpen = 9 * 60 + 15;   // 9:15 AM
+  const marketClose = 15 * 60 + 30; // 3:30 PM
+
+  if (day === 0 || day === 6) return 'Closed'; // Weekend
+  if (totalMinutes < marketOpen || totalMinutes >= marketClose) return 'Closed';
   return 'Open';
 }
 

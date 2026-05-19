@@ -22,7 +22,7 @@ const GainLossBadge = React.memo(({ amount, percentage }: Props) => {
   return (
     <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-sm font-medium ${typeClass}`}>
       <Icon size={14} />
-      <span>{formatCurrency(Math.abs(amount))} ({formatPercentage(Math.abs(percentage))})</span>
+      <span>{formatCurrency(Math.abs(amount))} ({formatPercentage(percentage)})</span>
     </div>
   );
 });
