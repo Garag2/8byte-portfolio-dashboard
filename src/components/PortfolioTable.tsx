@@ -71,13 +71,19 @@ const PortfolioTable = React.memo(({ holdings }: Props) => {
     },
     {
       accessorKey: 'peRatio',
-      header: 'P/E',
-      cell: (info: any) => <span className="text-slate-300">{info.getValue() as string}</span>,
+      header: 'P/E (TTM)',
+      cell: (info: any) => {
+        const val = info.getValue() as string;
+        return <span className="text-slate-300">{(!val || val === 'N/A') ? '—' : val}</span>;
+      },
     },
     {
       accessorKey: 'latestEarnings',
-      header: 'Earnings',
-      cell: (info: any) => <span className="text-slate-300">{info.getValue() as string}</span>,
+      header: 'Last Earnings Date',
+      cell: (info: any) => {
+        const val = info.getValue() as string;
+        return <span className="text-slate-300">{(!val || val === 'N/A') ? '—' : val}</span>;
+      },
     }
   ], []);
 
