@@ -1,0 +1,11 @@
+[
+  { "symbol": "AAPL", "shares": 50, "averageBuyPrice": 150.00 },
+  { "symbol": "MSFT", "shares": 30, "averageBuyPrice": 280.00 },
+  { "symbol": "GOOGL", "shares": 20, "averageBuyPrice": 110.00 },
+  { "symbol": "AMZN", "shares": 40, "averageBuyPrice": 120.00 },
+  { "symbol": "NVDA", "shares": 15, "averageBuyPrice": 400.00 },
+  { "symbol": "JPM", "shares": 25, "averageBuyPrice": 140.00 },
+  { "symbol": "JNJ", "shares": 35, "averageBuyPrice": 160.00 },
+  { "symbol": "PG", "shares": 40, "averageBuyPrice": 145.00 },
+  { "symbol": "XOM", "shares": 55, "averageBuyPrice": 105.00 }
+]
