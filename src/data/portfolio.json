@@ -1,11 +1,176 @@
 [
-  { "symbol": "AAPL", "shares": 50, "averageBuyPrice": 150.00 },
-  { "symbol": "MSFT", "shares": 30, "averageBuyPrice": 280.00 },
-  { "symbol": "GOOGL", "shares": 20, "averageBuyPrice": 110.00 },
-  { "symbol": "AMZN", "shares": 40, "averageBuyPrice": 120.00 },
-  { "symbol": "NVDA", "shares": 15, "averageBuyPrice": 400.00 },
-  { "symbol": "JPM", "shares": 25, "averageBuyPrice": 140.00 },
-  { "symbol": "JNJ", "shares": 35, "averageBuyPrice": 160.00 },
-  { "symbol": "PG", "shares": 40, "averageBuyPrice": 145.00 },
-  { "symbol": "XOM", "shares": 55, "averageBuyPrice": 105.00 }
+  {
+    "symbol": "HDFCBANK.NS",
+    "name": "HDFC Bank",
+    "shares": 50,
+    "averageBuyPrice": 1490
+  },
+  {
+    "symbol": "BAJFINANCE.NS",
+    "name": "Bajaj Finance",
+    "shares": 15,
+    "averageBuyPrice": 6466
+  },
+  {
+    "symbol": "532174.BO",
+    "name": "ICICI Bank",
+    "shares": 84,
+    "averageBuyPrice": 780
+  },
+  {
+    "symbol": "544252.BO",
+    "name": "Bajaj Housing",
+    "shares": 504,
+    "averageBuyPrice": 130
+  },
+  {
+    "symbol": "511577.BO",
+    "name": "Savani Financials",
+    "shares": 1080,
+    "averageBuyPrice": 24
+  },
+  {
+    "symbol": "AFFLE.NS",
+    "name": "Affle India",
+    "shares": 50,
+    "averageBuyPrice": 1151
+  },
+  {
+    "symbol": "LTIM.NS",
+    "name": "LTI Mindtree",
+    "shares": 16,
+    "averageBuyPrice": 4775
+  },
+  {
+    "symbol": "542651.BO",
+    "name": "KPIT Tech",
+    "shares": 61,
+    "averageBuyPrice": 672
+  },
+  {
+    "symbol": "544028.BO",
+    "name": "Tata Tech",
+    "shares": 63,
+    "averageBuyPrice": 1072
+  },
+  {
+    "symbol": "544107.BO",
+    "name": "BLS E-Services",
+    "shares": 191,
+    "averageBuyPrice": 232
+  },
+  {
+    "symbol": "532790.BO",
+    "name": "Tanla",
+    "shares": 45,
+    "averageBuyPrice": 1134
+  },
+  {
+    "symbol": "DMART.NS",
+    "name": "Dmart",
+    "shares": 27,
+    "averageBuyPrice": 3777
+  },
+  {
+    "symbol": "532540.BO",
+    "name": "Tata Consumer",
+    "shares": 90,
+    "averageBuyPrice": 845
+  },
+  {
+    "symbol": "500331.BO",
+    "name": "Pidilite",
+    "shares": 36,
+    "averageBuyPrice": 2376
+  },
+  {
+    "symbol": "500400.BO",
+    "name": "Tata Power",
+    "shares": 225,
+    "averageBuyPrice": 224
+  },
+  {
+    "symbol": "542323.BO",
+    "name": "KPI Green",
+    "shares": 50,
+    "averageBuyPrice": 875
+  },
+  {
+    "symbol": "532667.BO",
+    "name": "Suzlon",
+    "shares": 450,
+    "averageBuyPrice": 44
+  },
+  {
+    "symbol": "542851.BO",
+    "name": "Gensol",
+    "shares": 45,
+    "averageBuyPrice": 998
+  },
+  {
+    "symbol": "543517.BO",
+    "name": "Hariom Pipes",
+    "shares": 60,
+    "averageBuyPrice": 580
+  },
+  {
+    "symbol": "ASTRAL.NS",
+    "name": "Astral",
+    "shares": 56,
+    "averageBuyPrice": 1517
+  },
+  {
+    "symbol": "542652.BO",
+    "name": "Polycab",
+    "shares": 28,
+    "averageBuyPrice": 2818
+  },
+  {
+    "symbol": "543318.BO",
+    "name": "Clean Science",
+    "shares": 32,
+    "averageBuyPrice": 1610
+  },
+  {
+    "symbol": "506401.BO",
+    "name": "Deepak Nitrite",
+    "shares": 27,
+    "averageBuyPrice": 2248
+  },
+  {
+    "symbol": "541557.BO",
+    "name": "Fine Organic",
+    "shares": 16,
+    "averageBuyPrice": 4284
+  },
+  {
+    "symbol": "533282.BO",
+    "name": "Gravita",
+    "shares": 8,
+    "averageBuyPrice": 2037
+  },
+  {
+    "symbol": "540719.BO",
+    "name": "SBI Life",
+    "shares": 49,
+    "averageBuyPrice": 1197
+  },
+  {
+    "symbol": "500209.BO",
+    "name": "Infy",
+    "shares": 36,
+    "averageBuyPrice": 1647
+  },
+  {
+    "symbol": "543237.BO",
+    "name": "Happeist Mind",
+    "shares": 45,
+    "averageBuyPrice": 1103
+  },
+  {
+    "symbol": "543272.BO",
+    "name": "Easemytrip",
+    "shares": 1332,
+    "averageBuyPrice": 20
+  }
 ]
