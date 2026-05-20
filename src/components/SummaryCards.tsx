@@ -56,7 +56,7 @@ const SummaryCards = React.memo(({ summary }: Props) => {
           ⚡
         </div>
         <div className="text-slate-400 text-xs md:text-sm font-medium uppercase tracking-wider flex items-center gap-2">
-          <Activity size={16} className="text-amber-400 group-hover:animate-bounce" /> Today's Return 🔥
+          <Activity size={16} className="text-amber-400 group-hover:animate-bounce" /> Today&apos;s Return 🔥
         </div>
         <div className="text-2xl md:text-3xl font-bold">
           <GainLossBadge amount={summary.dayGainLossAmount} percentage={summary.dayGainLossPercentage} />

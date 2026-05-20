@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useMemo } from 'react';
-import { flexRender, getCoreRowModel, getSortedRowModel, useReactTable, SortingState } from '@tanstack/react-table';
+import { ColumnDef, flexRender, getCoreRowModel, getSortedRowModel, useReactTable, SortingState } from '@tanstack/react-table';
 import { EnrichedHolding } from '../types/portfolio';
 import { formatCurrency, formatNumber, formatPercentage } from '../utils/formatter';
 import GainLossBadge from './GainLossBadge';
@@ -13,75 +13,75 @@ interface Props {
 const PortfolioTable = React.memo(({ holdings }: Props) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = useMemo(() => [
+  const columns = useMemo<ColumnDef<EnrichedHolding>[]>(() => [
     {
-      accessorKey: 'symbol',
-      header: 'Asset',
-      cell: (info: any) => (
+      accessorKey: 'name',
+      header: 'Particulars',
+      cell: ({ getValue, row }) => (
         <div>
-          <div className="font-bold text-blue-400">{info.getValue() as string}</div>
-          <div className="text-xs text-slate-400 mt-1">{info.row.original.name}</div>
+          <div className="font-bold text-blue-400">{getValue<string>()}</div>
+          <div className="text-xs text-slate-400 mt-1">{row.original.symbol}</div>
         </div>
       ),
     },
     {
-      accessorKey: 'shares',
-      header: 'Shares',
-      cell: (info: any) => formatNumber(info.getValue() as number),
-    },
-    {
       accessorKey: 'averageBuyPrice',
-      header: 'Avg Cost',
-      cell: (info: any) => formatCurrency(info.getValue() as number),
+      header: 'Purchase Price',
+      cell: ({ getValue }) => formatCurrency(getValue<number>()),
     },
     {
-      accessorKey: 'currentPrice',
-      header: 'Price (CMP)',
-      cell: (info: any) => formatCurrency(info.getValue() as number),
+      accessorKey: 'shares',
+      header: 'Qty',
+      cell: ({ getValue }) => formatNumber(getValue<number>()),
     },
     {
-      accessorKey: 'presentValue',
-      header: 'Present Value',
-      cell: (info: any) => formatCurrency(info.getValue() as number),
+      accessorKey: 'totalInvestment',
+      header: 'Investment',
+      cell: ({ getValue }) => formatCurrency(getValue<number>()),
     },
     {
       accessorKey: 'portfolioPercentage',
       header: 'Portfolio %',
-      cell: (info: any) => formatPercentage(info.getValue() as number),
+      cell: ({ getValue }) => formatPercentage(getValue<number>()),
     },
     {
-      accessorKey: 'dayGainLossAmount',
-      header: 'Today\'s Change',
-      cell: (info: any) => (
-        <GainLossBadge 
-          amount={info.getValue() as number} 
-          percentage={info.row.original.dayGainLossPercentage} 
-        />
-      ),
+      accessorKey: 'exchangeCode',
+      header: 'NSE/BSE',
+      cell: ({ getValue }) => <span className="font-medium text-slate-300">{getValue<string>()}</span>,
+    },
+    {
+      accessorKey: 'currentPrice',
+      header: 'CMP',
+      cell: ({ getValue }) => formatCurrency(getValue<number>()),
+    },
+    {
+      accessorKey: 'presentValue',
+      header: 'Present Value',
+      cell: ({ getValue }) => formatCurrency(getValue<number>()),
     },
     {
       accessorKey: 'totalGainLossAmount',
-      header: 'Total Return',
-      cell: (info: any) => (
+      header: 'Gain/Loss',
+      cell: ({ getValue, row }) => (
         <GainLossBadge 
-          amount={info.getValue() as number} 
-          percentage={info.row.original.totalGainLossPercentage} 
+          amount={getValue<number>()} 
+          percentage={row.original.totalGainLossPercentage} 
         />
       ),
     },
     {
       accessorKey: 'peRatio',
       header: 'P/E (TTM)',
-      cell: (info: any) => {
-        const val = info.getValue() as string;
+      cell: ({ getValue }) => {
+        const val = getValue<string | number>();
         return <span className="text-slate-300">{(!val || val === 'N/A') ? '—' : val}</span>;
       },
     },
     {
       accessorKey: 'latestEarnings',
-      header: 'Last Earnings Date',
-      cell: (info: any) => {
-        const val = info.getValue() as string;
+      header: 'Latest Earnings',
+      cell: ({ getValue }) => {
+        const val = getValue<string>();
         return <span className="text-slate-300">{(!val || val === 'N/A') ? '—' : val}</span>;
       },
     }
