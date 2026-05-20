@@ -1,6 +1,12 @@
 import { PortfolioHolding, EnrichedHolding, PortfolioData, PortfolioSummary, SectorAllocation } from '../types/portfolio';
 import { getStockData } from './yahooFinance';
 
+function getExchangeCode(symbol: string) {
+  if (symbol.endsWith('.NS')) return symbol.replace('.NS', '');
+  if (symbol.endsWith('.BO')) return symbol.replace('.BO', '');
+  return symbol;
+}
+
 function checkMarketStatus(): 'Open' | 'Closed' {
   // NSE/BSE trading hours: Mon–Fri, 9:15 AM – 3:30 PM IST (UTC+5:30)
   const now = new Date();
@@ -34,7 +40,7 @@ export async function getEnrichedPortfolio(holdings: PortfolioHolding[]): Promis
   }
 
   const stockData = await getStockData(symbols);
-  const dataMap = new Map(stockData.map((d: any) => [d.symbol, d]));
+  const dataMap = new Map(stockData.map(d => [d.symbol, d]));
 
   let totalInvestment = 0;
   let presentValue = 0;
@@ -61,7 +67,8 @@ export async function getEnrichedPortfolio(holdings: PortfolioHolding[]): Promis
 
     return {
       ...holding,
-      name: data?.shortName || data?.longName || holding.symbol,
+      name: data?.shortName || data?.longName || holding.name,
+      exchangeCode: getExchangeCode(holding.symbol),
       currentPrice,
       previousClose,
       totalInvestment: investment,
@@ -78,7 +85,7 @@ export async function getEnrichedPortfolio(holdings: PortfolioHolding[]): Promis
   });
 
   enrichedHoldings.forEach(h => {
-    h.portfolioPercentage = presentValue > 0 ? (h.presentValue / presentValue) * 100 : 0;
+    h.portfolioPercentage = totalInvestment > 0 ? (h.totalInvestment / totalInvestment) * 100 : 0;
   });
   
   enrichedHoldings.sort((a, b) => b.presentValue - a.presentValue);
@@ -97,18 +104,29 @@ export async function getEnrichedPortfolio(holdings: PortfolioHolding[]): Promis
     dayGainLossPercentage,
   };
 
-  const sectorMap = new Map<string, number>();
+  const sectorMap = new Map<string, Pick<SectorAllocation, 'sector' | 'totalInvestment' | 'presentValue' | 'gainLossAmount'>>();
   enrichedHoldings.forEach(h => {
-    sectorMap.set(h.sector, (sectorMap.get(h.sector) || 0) + h.presentValue);
+    const sector = sectorMap.get(h.sector) || {
+      sector: h.sector,
+      totalInvestment: 0,
+      presentValue: 0,
+      gainLossAmount: 0,
+    };
+
+    sector.totalInvestment += h.totalInvestment;
+    sector.presentValue += h.presentValue;
+    sector.gainLossAmount += h.totalGainLossAmount;
+    sectorMap.set(h.sector, sector);
   });
 
-  const sectors: SectorAllocation[] = Array.from(sectorMap.entries())
-    .map(([sector, value]) => ({
-      sector,
-      value,
-      percentage: presentValue > 0 ? (value / presentValue) * 100 : 0
+  const sectors: SectorAllocation[] = Array.from(sectorMap.values())
+    .map(sector => ({
+      ...sector,
+      gainLossPercentage: sector.totalInvestment > 0 ? (sector.gainLossAmount / sector.totalInvestment) * 100 : 0,
+      value: sector.presentValue,
+      percentage: presentValue > 0 ? (sector.presentValue / presentValue) * 100 : 0
     }))
-    .sort((a, b) => b.value - a.value);
+    .sort((a, b) => b.presentValue - a.presentValue);
 
   return {
     holdings: enrichedHoldings,
