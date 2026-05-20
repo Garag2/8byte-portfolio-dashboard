@@ -1,7 +1,8 @@
 export const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'INR',
+    maximumFractionDigits: 2,
   }).format(value);
 };
 
@@ -15,5 +16,5 @@ export const formatPercentage = (value: number) => {
 };
 
 export const formatNumber = (value: number) => {
-  return new Intl.NumberFormat('en-US').format(value);
+  return new Intl.NumberFormat('en-IN').format(value);
 };
