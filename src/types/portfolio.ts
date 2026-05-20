@@ -1,11 +1,12 @@
 export interface PortfolioHolding {
   symbol: string;
+  name: string;
   shares: number;
   averageBuyPrice: number;
 }
 
 export interface EnrichedHolding extends PortfolioHolding {
-  name: string;
+  exchangeCode: string;
   currentPrice: number;
   previousClose: number;
   totalInvestment: number;
@@ -31,6 +32,10 @@ export interface PortfolioSummary {
 
 export interface SectorAllocation {
   sector: string;
+  totalInvestment: number;
+  presentValue: number;
+  gainLossAmount: number;
+  gainLossPercentage: number;
   value: number;
   percentage: number;
 }
